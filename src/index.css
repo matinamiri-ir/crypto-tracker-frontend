@@ -1,0 +1,103 @@
+@import "tailwindcss";
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+
+@layer base {
+  html {
+    color: #0a0f1a; 
+    background-color: #f2f2f2; 
+  }
+
+
+  [data-theme="dark"] {
+    color: #f7f7f7; 
+    background-color: #0a0f1a ; 
+  }
+}
+
+@layer utilities {
+ 
+  .bg-secondary {
+    background-color: #ffffff; 
+  }
+
+  [data-theme="dark"] .bg-secondary {
+    background-color: #0c1427; 
+  }
+
+ 
+  .bg-header {
+    background-color: #eaeaea; 
+  }
+
+  [data-theme="dark"] .bg-header {
+    background-color: #0c1427;
+  }
+
+ 
+  .text-subtle {
+    color: #666666;
+  }
+
+  [data-theme="dark"] .text-subtle {
+    color: #bbbbbb;
+  }
+}
+div {
+  user-select: none; 
+ 
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* مخفی کردن spinner توی فایرفاکس */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+.ripple {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 9999px;
+  transform: scale(0);
+  animation: ripple-bg 700ms ease-out;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes ripple-bg {
+  to {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+
+
+/* کلاس اصلی */
+.fade-in {
+  animation: fade-in linear;
+ 
+  animation-duration: 1s;
+
+  
+  animation-timeline: view();
+  
+}
+/* تعریف انیمیشن */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    scale: .95;
+  }
+  30%{
+    opacity: 0.8;
+
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}

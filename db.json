@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "ma@example.com",
+      "password": "123456",
+      "balance": 18250.75,
+      "favorites": ["bitcoin", "ethereum"],
+      "portfolio": [
+        {
+          "symbol": "BTC",
+          "amount": 0.75,
+          "avgBuyPrice": 43000
+        }
+      ],
+      "transactions": [
+        {
+          "id": 101,
+          "type": "buy",
+          "symbol": "BTC",
+          "amount": 0.5,
+          "price": 42000,
+          "timestamp": "2025-06-28T12:45:00Z"
+        }
+      ]
+    }
+  ]
+}

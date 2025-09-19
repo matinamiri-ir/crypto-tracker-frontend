@@ -1,0 +1,22 @@
+<svg width="400" height="150" viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7e22ce;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="chartGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#c084fc;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#9333ea;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="secondaryGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#9ca3af;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6b7280;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <g id="textOnly" transform="translate(200, 20)">
+    <text x="0" y="25" font-family="Inter, sans-serif" font-size="20" font-weight="600" fill="url(#primaryGrad)" letter-spacing="-0.02em">MA</text>
+    <text x="35" y="25" font-family="Inter, sans-serif" font-size="20" font-weight="300" fill="url(#secondaryGrad)" letter-spacing="-0.02em">Coins</text>
+    <line x1="0" y1="30" x2="75" y2="30" stroke="url(#primaryGrad)" stroke-width="1" opacity="0.3"/>
+  </g>
+</svg>

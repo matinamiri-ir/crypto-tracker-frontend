@@ -11,8 +11,8 @@ import AuthSuccess from "../pages/AuthSuccess";
 import Markets from "../pages/Markets";
 import Trade from "../pages/Trade";
 import Exchange from "../pages/Exchange";
-import Buy from "../components/exchange/buy";
-import Sell from "../components/exchange/sell";
+import Buy from "../components/exchange/Buy";
+import Sell from "../components/exchange/Sell";
 const routes = [
   {
     path: "/",

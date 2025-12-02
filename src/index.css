@@ -1,40 +1,35 @@
 @import "tailwindcss";
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
-
 @layer base {
   html {
-    color: #0a0f1a; 
-    background-color: #f2f2f2; 
+    color: #0a0f1a;
+    background-color: #f2f2f2;
   }
 
-
   [data-theme="dark"] {
-    color: #f7f7f7; 
-    background-color: #0a0f1a ; 
+    color: #f7f7f7;
+    background-color: #0a0f1a;
   }
 }
 
 @layer utilities {
- 
   .bg-secondary {
-    background-color: #ffffff; 
+    background-color: #ffffff;
   }
 
   [data-theme="dark"] .bg-secondary {
-    background-color: #0c1427; 
+    background-color: #0c1427;
   }
 
- 
   .bg-header {
-    background-color: #eaeaea; 
+    background-color: #eaeaea;
   }
 
   [data-theme="dark"] .bg-header {
     background-color: #0c1427;
   }
 
- 
   .text-subtle {
     color: #666666;
   }
@@ -44,17 +39,16 @@
   }
 }
 div {
-  user-select: none; 
- 
+  user-select: none;
 }
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
 /* مخفی کردن spinner توی فایرفاکس */
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 .ripple {
@@ -74,30 +68,42 @@ input[type=number] {
   }
 }
 
-
-
 /* کلاس اصلی */
 .fade-in {
   animation: fade-in linear;
- 
+
   animation-duration: 1s;
 
-  
   animation-timeline: view();
-  
 }
 /* تعریف انیمیشن */
 @keyframes fade-in {
   from {
     opacity: 0;
-    scale: .95;
+    scale: 0.95;
   }
-  30%{
+  30% {
     opacity: 0.8;
-
   }
   to {
     opacity: 1;
     scale: 1;
+  }
+}
+@layer utilities {
+  @keyframes blink {
+    0%
+     {
+      opacity: 0.8;
+      transform: scale(1);
+    }
+   100%{
+      opacity: 0.2;
+      transform: scale(1.6);
+    }
+
+  }
+  .animate-blink{
+    animation: blink  3s infinite ease-in-out;
   }
 }

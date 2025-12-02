@@ -1,12 +1,12 @@
 import { Button } from "@mui/material";
-import React, { useEffect, useMemo, useState, type FormEvent } from "react";
+import React, { useEffect, useState, type FormEvent } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CommentItem from "./CommentItem";
 import DialogBar from "../../modal/Dialog";
 import { useUser } from "../../../utils/Context/UserProvider";
 import { useTheme } from "../../../utils/Context/ThemeProvider";
 import { WestOutlined } from "@mui/icons-material";
-import Pagination from '@mui/material/Pagination';
+
 import {
   addComment,
   getComments,
@@ -34,10 +34,6 @@ function Comments({
   useEffect(() => {
     fetchData();
   }, []);
-
-  useMemo(()=>{
-    
-  },[coinComments])
 
   const isDark = theme === "dark";
   const userUnSetAvator = !isDark

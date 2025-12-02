@@ -28,13 +28,12 @@ function CommentItem({
   // ===== State محور کردن کامپوننت =====
   const [likes, setLikes] = useState(comment.likes ?? 0);
   const [dislikes, setDislikes] = useState(comment.dislikes ?? 0);
-  const [rating, setRating] = useState(comment.rating ?? 0)
+  const [rating, setRating] = useState(comment.rating ?? 0);
   const [openLoginDialog, setOpenLoginDialog] = useState<boolean>(false);
   const formatDate = moment(comment.createdAt).format("jYYYY/jM/jD");
   const [canDelete, setCanDelete] = useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   useEffect(() => {
-    console.log(comment)
     if (comment.userId === userID) {
       setCanDelete(true);
     }
@@ -127,7 +126,12 @@ function CommentItem({
               <span className="text-sm font-medium text-subtle text-nowrap">
                 {rating} از 5 رای
               </span>
-              <Rating sx={{ direction: "ltr" }} readOnly value={rating}  defaultValue={0} />
+              <Rating
+                sx={{ direction: "ltr" }}
+                readOnly
+                value={rating}
+                defaultValue={0}
+              />
             </div>
           </div>
 

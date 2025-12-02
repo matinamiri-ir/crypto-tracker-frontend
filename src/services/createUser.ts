@@ -13,7 +13,7 @@ interface ApiResponse {
 }
 const createUser = async (user: UserType): Promise<ApiResponse> => {
   try {
-    const res = await axios.post<ApiResponse>("http://localhost:3120/api/users/register", user, {
+    const res = await axios.post<ApiResponse>("https://crypto-tracker-backend-xt56.onrender.com/api/users/register", user, {
     withCredentials:true,
       headers: {
         "Content-Type": "application/json",

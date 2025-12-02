@@ -8,24 +8,28 @@ import AcoordingContext from "../../utils/Context/AcoordingContext";
 import { useFilteredCoins } from "../../utils/custom-hook/useFilteredCoins";
 import { Link } from "react-router-dom";
 import { useV1Market } from "../../utils/custom-hook/useV1Market";
-import type { OldMarket } from "../../utils/types/markets";
 import { Button } from "@mui/material";
+import type { RankData } from "../../pages/Markets";
 
 const MainHome = () => {
   const { theme } = useTheme();
   const toPersianDigits = usePersianDigits();
-  const { topGainers, newCoins, trending } = useFilteredCoins(5);
+  const { topGainers, newCoins, trending } = useFilteredCoins();
+  console.log(topGainers);
   const { loading } = useV1Market();
   return (
     <main className="w-full min-h-screen bg-[unset] ">
       <section className="w-full lg:px-16 container mx-auto  px-4 ">
         {!loading && (
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-10 items-center  py-12 w-full">
-            <ShowCoinCard title="محبوب ترین ها" hook={trending} />
-            <ShowCoinCard title="پر سود ترین‌ ها" hook={topGainers} />
+            <ShowCoinCard title="محبوب ترین ها" hook={trending.slice(0, 5)} />
+            <ShowCoinCard
+              title="پر سود ترین‌ ها"
+              hook={topGainers.slice(0, 5)}
+            />
             <ShowCoinCard
               title="جد‌ید ترین ارز‌ ها"
-              hook={newCoins}
+              hook={newCoins.slice(0, 5)}
               className="hidden xl:flex"
             />
           </div>
@@ -482,7 +486,7 @@ const ShowCoinCard = ({
   className = "flex",
 }: {
   title: string;
-  hook: OldMarket[];
+  hook: RankData[];
   className?: string;
 }) => {
   // const { pathname } = useLocation();
@@ -499,14 +503,14 @@ const ShowCoinCard = ({
         {hook.map((coin) => {
           return (
             <Link
-              key={coin?.symbol}
-              to={`/coin/${coin?.symbol}?baseAsset=${coin?.baseAsset}&name=${coin?.enName}`}
+              key={coin.coins[0]?.symbol}
+              to={`/coin/${coin.coins[0]?.symbol}?baseAsset=${coin?.base}&name=${coin.coins[0]?.enName}`}
               className="flex items-center justify-between  w-full px-10 py-4 dark:hover:bg-gray-800/60 "
             >
               <div className="flex items-center gap-3">
                 <img
-                  src={coin.baseAsset_svg_icon}
-                  alt={coin.baseAsset}
+                  src={coin.svg_icon}
+                  alt={coin.base}
                   width={"36px"}
                   height={"36px"}
                   className=""
@@ -515,26 +519,29 @@ const ShowCoinCard = ({
                 />
 
                 <div className="flex items-start flex-col justify-center">
-                  <h4 className="font-medium">{coin?.baseAsset}</h4>
-                  <p className="text-subtle">{coin?.faBaseAsset}</p>
+                  <h4 className="font-medium">{coin?.base}</h4>
+                  <p className="text-subtle">{coin?.faBase}</p>
                 </div>
               </div>
               <div className="flex flex-col gap-1 items-end">
                 <h5 className="font-medium text-sm lg:text-base text-nowrap">
-                  {parseFloat(coin?.stats.lastPrice).toLocaleString("fa-IR", {
-                    maximumFractionDigits: 2,
-                  })}
+                  {parseFloat(coin.coins[0]?.stats.lastPrice).toLocaleString(
+                    "fa-IR",
+                    {
+                      maximumFractionDigits: 2,
+                    }
+                  )}
                   تومان
                 </h5>
                 <p
                   className={`${
-                    coin.stats["24h_ch"] >= 0
+                    coin.coins[0].stats["24h_ch"] >= 0
                       ? "text-green-600 "
                       : "text-red-600 "
                   } `}
                   dir="ltr"
                 >
-                  {coin?.stats["24h_ch"]}%
+                  {coin?.coins[0]?.stats["24h_ch"]}%
                 </p>
               </div>
             </Link>

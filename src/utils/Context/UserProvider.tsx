@@ -71,11 +71,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const fetchUser = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:3120/api/users/me/profile",
-        {
-          withCredentials: true,
-        }
+        "https://crypto-tracker-backend-xt56.onrender.com/api/users/me/profile",
+        { withCredentials: true }
       );
+      console.log(res);
       setUser(res.data.data.user);
     } catch {
       setUser(null);
@@ -92,7 +91,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:3120/api/users/login",
+        "https://crypto-tracker-backend-xt56.onrender.com/api/users/login",
         { email, password },
         { withCredentials: true }
       );
@@ -112,7 +111,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const logout = async () => {
     setUser(null);
     const res = await axios.post(
-      "http://localhost:3120/api/users/logout",
+      "https://crypto-tracker-backend-xt56.onrender.com/api/users/logout",
       {},
       { withCredentials: true }
     );

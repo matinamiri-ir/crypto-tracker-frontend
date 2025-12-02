@@ -5,7 +5,21 @@ export interface MarketResponse {
     markets: Market[];
   };
 }
-
+export interface CoinData {
+  base: string;
+  newMarkets: Market[];
+  oldMarkets: OldMarket[];
+  price: {
+    toman: number;
+    tether: number;
+  };
+  svg: string;
+}
+export interface CoinResponse {
+  success: boolean;
+  message: string;
+  data: CoinData;
+}
 export interface Market {
   symbol: string;
   base_asset: string;
@@ -134,7 +148,6 @@ export type OldMarket = {
   isNew: boolean;
   isZeroFee: boolean;
   isMarketTypeEnable: boolean;
-  
 };
 
 export type OldMarketResponse = {

@@ -1,13 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../utils/Context/UserProvider";
-import React from "react";
+import React, { useEffect } from "react";
 
 export default function Dashboard() {
   const { user, loading, logout } = useUser();
-const navigate = useNavigate()
-  if (loading) return <p>در حال بارگذاری...</p>;
+  const navigate = useNavigate();
 
-  if (!user) navigate("/register/signin")
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/register/signin");
+    }
+  }, [user, loading, navigate]);
+
+  if (loading) return <p>در حال بارگذاری...</p>;
 
   return (
     <div>

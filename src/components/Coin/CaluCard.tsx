@@ -6,30 +6,29 @@ import type { OldMarket } from "../../utils/types/markets";
 import { fnum } from "../../utils/functional/formatNumber";
 import SelectCurrencyBox from "./SelectCurrencyBox";
 import { useTheme } from "../../utils/Context/ThemeProvider";
+import { Link } from "react-router-dom";
 
 function CaluCard({
   coinTMN,
   coinUSDT,
-  
+
   baseAsset,
 }: {
   coinTMN: OldMarket | null;
   coinUSDT: OldMarket | null;
-  
+
   baseAsset: string;
 }) {
   const [currencyValue, setCurrencValue] = useState<string>("");
-const [currency, setCurrency] = useState<"TMN" | "USDT">("TMN");
+  const [currency, setCurrency] = useState<"TMN" | "USDT">("TMN");
   const [CoinValue, setCoinValue] = useState<string>("");
   const { coin: coinUSDTLive } = useLiveCoin(`${baseAsset?.toUpperCase()}USDT`);
   const { coin: coinTMNLive } = useLiveCoin(`${baseAsset?.toUpperCase()}TMN`);
-const {theme}=useTheme()
-useEffect(()=>{
-    setCoinValue("")
-    setCurrencValue("")
-},[currency])
-
-
+  const { theme } = useTheme();
+  useEffect(() => {
+    setCoinValue("");
+    setCurrencValue("");
+  }, [currency]);
 
   const handleCurrencyValue = (event: ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value;
@@ -53,7 +52,10 @@ useEffect(()=>{
       else if (num >= 1_000_000_000) fractionDigits = 1;
 
       setCurrencValue(num.toLocaleString("fa-IR"));
-      const selectedPrice = currency==="TMN" ? coinTMNLive?.price ?? coinTMN?.stats.lastPrice ?? 0 : coinUSDTLive?.price ?? coinUSDT?.stats.lastPrice ?? 0;
+      const selectedPrice =
+        currency === "TMN"
+          ? coinTMNLive?.price ?? coinTMN?.stats.lastPrice ?? 0
+          : coinUSDTLive?.price ?? coinUSDT?.stats.lastPrice ?? 0;
       const setCoinPrice = Number(eng) / Number(selectedPrice);
       setCoinValue(
         setCoinPrice.toLocaleString("fa-IR", {
@@ -150,7 +152,10 @@ useEffect(()=>{
                 }
                 alt={coinTMN?.baseAsset}
               />
-              <SelectCurrencyBox setCurrency={setCurrency} currency={currency}/>
+              <SelectCurrencyBox
+                setCurrency={setCurrency}
+                currency={currency}
+              />
             </div>
             <div className="p-1 w-full ">
               <input
@@ -194,17 +199,21 @@ useEffect(()=>{
           <Button
             variant="contained"
             className=" "
-            
             sx={{
               padding: "12px 10px",
               fontFamily: "IRANSansX",
               fontSize: "16px",
               borderRadius: "12px",
-              color:"white",
-              bgcolor: theme==="dark" ? "#357a38" : "black"
+              color: "white",
+              bgcolor: theme === "dark" ? "#357a38" : "black",
             }}
           >
-            خرید آسان {coinTMN?.faBaseAsset}
+            <Link
+              to={`/exchange/buy?source=TMN&destination=${coinTMN?.baseAsset}`}
+            >
+              {" "}
+              خرید آسان {coinTMN?.faBaseAsset}
+            </Link>
           </Button>
         </div>
       </div>

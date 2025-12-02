@@ -8,7 +8,11 @@ import Coin from "../pages/Coin";
 import MainLayout from "../components/Layout/MainLayout";
 import Dashboard from "../pages/Dashboard";
 import AuthSuccess from "../pages/AuthSuccess";
-import Markets from "../pages/markets";
+import Markets from "../pages/Markets";
+import Trade from "../pages/Trade";
+import Exchange from "../pages/Exchange";
+import Buy from "../components/exchange/buy";
+import Sell from "../components/exchange/sell";
 const routes = [
   {
     path: "/",
@@ -29,6 +33,15 @@ const routes = [
       {
         path: "/markets",
         element: <Markets />,
+      },
+      { path: "trade/:symbol", element: <Trade /> },
+      {
+        path: "exchange",
+        element: <Exchange />,
+        children: [
+          { path: "buy", element: <Buy /> },
+          { path: "Sell", element: <Sell /> },
+        ],
       },
     ],
   },

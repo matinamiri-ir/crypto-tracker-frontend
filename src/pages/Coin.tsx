@@ -1,92 +1,60 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
-import type { OldMarket } from "../utils/types/markets";
+import { Link, useParams, useSearchParams } from "react-router-dom";
+import type { CoinData, CoinResponse, OldMarket } from "../utils/types/markets";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import { fnum } from "../utils/functional/formatNumber";
 import { useTheme } from "../utils/Context/ThemeProvider";
-import { IconButton, Skeleton } from "@mui/material";
+import { Skeleton } from "@mui/material";
 import SwiperCard from "../components/Coin/Swiper";
 import LiveCoinPrice from "../components/Coin/LiveCoinPrice";
 import CaluCard from "../components/Coin/CaluCard";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import TradingMarket from "../components/Coin/TradingMarket";
-
 import TradingViewWidget from "../components/Coin/TradingViewWidget";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import ShareIcon from "@mui/icons-material/Share";
 import Comments from "../components/Coin/comment/Comments";
 import useTitle from "../utils/custom-hook/useTitle";
 import TechAnalusis from "../components/Coin/TechAnalusis";
-import handleShare from "../services/coin/share";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
-import {
-  toggleLikeCoin,
-  toggleBookmarkCoin,
-} from "../services/coin/likeService";
-import { useUser } from "../utils/Context/UserProvider";
-interface CoinStats {
-  like: boolean;
-  bookmark: boolean;
-}
+import NavigateSec from "../components/Coin/NavigateSec";
+
 function Coin() {
   const { theme } = useTheme();
   const [loading, setLoading] = useState<boolean>(true);
-  const [allCoins, setAllCoins] = useState<OldMarket[] | null>(null);
-  const [coinTMN, setCoinTMN] = useState<OldMarket | null>(null);
-  const [coinUSDT, setCoinUSDT] = useState<OldMarket | null>(null);
+  const [coin, setCoin] = useState<CoinData | null>(null);
   const [searchParam] = useSearchParams();
-  const [{ like, bookmark }] = useState<CoinStats>({
-    like: false,
-    bookmark: false,
-  });
+  const param = useParams();
+  const isTMN = param.symbol?.includes("TMN") ? true : false;
   const baseAssetParam = searchParam.get("baseAsset");
-  const { user } = useUser();
+
+  useEffect(() => {
+    window.scroll({ top: 0, behavior: "smooth" });
+  }, []);
+
   useEffect(() => {
     async function getCoin() {
       if (!baseAssetParam) return;
 
       try {
         setLoading(true);
-        const { data } = await axios.get<OldMarket[]>(
-          `https://crypto-tracker-backend-xt56.onrender.com/coin/${baseAssetParam}`
+        const { data } = await axios.get<CoinResponse>(
+          `https://crypto-tracker-backend-xt56.onrender.com/api/markets?base=${baseAssetParam}`
         );
-        setAllCoins(data);
-        const tmnCoin = data.find((coin) =>
-          coin.symbol.toUpperCase().endsWith("TMN")
-        );
-        const usdtCoin = data.find((coin) =>
-          coin.symbol.toUpperCase().endsWith("USDT")
-        );
-        if (tmnCoin) {
-          const tether = { ...tmnCoin, symbol: "USDT" };
-          setCoinUSDT(usdtCoin ?? tether);
-        }
-        setCoinTMN(tmnCoin ?? null);
+        console.log(data.data.base);
+        setCoin(data.data);
+        console.log(coin);
 
         setLoading(false);
       } catch (err) {
-        console.error("Failed to fetch coin:", err);
-        setCoinTMN(null);
-        setCoinUSDT(null);
+        console.log(err);
       }
     }
 
     getCoin();
   }, [baseAssetParam]);
-  useTitle(`خرید ${coinTMN?.faBaseAsset}`);
-
-  useEffect(() => {
-    if (user && coinTMN) {
-      console.log(user.likedCoins);
-    }
-  }, [user, coinTMN]);
-
+  useTitle(`خرید ${coin?.newMarkets[0].fa_base_asset}`);
   return (
     <main className="px-4 md:px-0  py-8">
       <section className="container mx-auto flex flex-col gap-12 ">
-        {!loading ? (
+        {!loading && coin ? (
           <>
             <div className="flex items-center gap-[1px] lg:gap-[3px]">
               <Link to={"/"} className="text-subtle text-sm  lg:text-base">
@@ -101,15 +69,15 @@ function Coin() {
               </Link>
               <KeyboardArrowLeftIcon fontSize="small" className="text-subtle" />
               <p className="font-medium text-center text-sm  lg:text-base">
-                {coinTMN?.faBaseAsset}{" "}
+                {coin?.oldMarkets[0].faBaseAsset}{" "}
                 <span
                   className={`${
-                    (coinTMN?.stats!["24h_ch"] ?? 0) >= 0
+                    (coin?.oldMarkets[0]?.stats!["24h_ch"] ?? 0) >= 0
                       ? "text-green-600"
                       : "text-red-600"
                   }`}
                 >
-                  ({coinTMN?.baseAsset})
+                  ({coin?.oldMarkets[0].baseAsset})
                 </span>
               </p>
             </div>
@@ -118,8 +86,8 @@ function Coin() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2  ">
                     <img
-                      src={coinTMN?.baseAsset_svg_icon}
-                      alt={coinTMN?.enName}
+                      src={coin?.svg}
+                      alt={coin?.base}
                       className="object-cover w-9 h-9 lg:w-12 lg:h-12 "
                       draggable="false"
                       loading="lazy"
@@ -127,52 +95,26 @@ function Coin() {
                     <p className="font-medium text-base lg:text-xl !font-[Irancell1]">
                       قیمت{" "}
                       <span className="!font-[Irancell1]">
-                        {coinTMN?.faBaseAsset}
+                        {coin?.oldMarkets[0].faBaseAsset}
                       </span>
                     </p>
-                    <p className="font-medium text-lg">
-                      ({coinTMN?.baseAsset})
-                    </p>
+                    <p className="font-medium text-lg">({coin?.base})</p>
                   </div>
-
-                  <div className="flex items-cetner gap-2">
-                    <IconButton
-                      onClick={() =>
-                        toggleLikeCoin(
-                          coinTMN?.symbol as string,
-                          user?.id as string
-                        )
-                      }
-                    >
-                      {like ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                    </IconButton>
-                    <IconButton
-                      onClick={() =>
-                        toggleBookmarkCoin(
-                          coinTMN?.symbol as string,
-                          user?.id as string
-                        )
-                      }
-                    >
-                      {bookmark ? <BookmarkIcon /> : <BookmarkBorderIcon />}
-                    </IconButton>
-
-                    <IconButton onClick={handleShare}>
-                      <ShareIcon />
-                    </IconButton>
-                  </div>
+                  <NavigateSec
+                    coin={isTMN ? coin.oldMarkets[0] : coin.oldMarkets[1]}
+                  />
                 </div>
                 <div className="flex flex-col gap-3 justify-center">
                   <div className="flex items-center justify-between">
                     <LiveCoinPrice
-                      coinTMN={coinTMN}
-                      coinUSDT={coinUSDT}
-                      baseAsset={baseAssetParam as string}
+                      coinTMN={coin?.oldMarkets[0] as OldMarket}
+                      coinUSDT={coin?.oldMarkets[0] as OldMarket}
+                      baseAsset={coin?.base as string}
                     />
                   </div>
                 </div>
 
-                <TradingMarket allCoin={allCoins as OldMarket[]} />
+                <TradingMarket Coin={coin?.oldMarkets as OldMarket[]} />
               </div>
               <div className="col-span-1 self-start justify-center    flex flex-col items-center gap-8   ">
                 <div className="p-4 rounded-2xl border border-gray-300  dark:border-gray-700 w-full lg:row-span-1">
@@ -205,8 +147,8 @@ function Coin() {
                         <p>
                           $
                           {fnum(
-                            coinUSDT?.stats?.["24h_highPrice"],
-                            coinUSDT?.stats.bidPrice
+                            coin?.oldMarkets[1]?.stats?.["24h_highPrice"],
+                            coin?.oldMarkets[1]?.stats.bidPrice
                           )}
                         </p>
                         <p className="text-sm text-subtle ">تتر</p>
@@ -240,8 +182,8 @@ function Coin() {
                         <p>
                           $
                           {fnum(
-                            coinUSDT?.stats["24h_lowPrice"],
-                            coinUSDT?.stats.bidPrice
+                            coin?.oldMarkets[1]?.stats["24h_lowPrice"],
+                            coin?.oldMarkets[1]?.stats.bidPrice
                           )}
                         </p>
                         <p className="text-sm text-subtle ">تتر</p>
@@ -250,38 +192,38 @@ function Coin() {
                   </div>
                 </div>
                 <CaluCard
-                  coinTMN={coinTMN}
-                  coinUSDT={coinUSDT}
-                  baseAsset={baseAssetParam as string}
+                  coinTMN={coin?.oldMarkets[0] as OldMarket}
+                  coinUSDT={coin?.oldMarkets[1] as OldMarket}
+                  baseAsset={coin?.base as string}
                 />
               </div>
               <div className="w-full h-[300px]  lg:hidden block bg-secondary p-4 rounded-2xl ">
                 <TradingViewWidget
-                  symbol={coinUSDT?.symbol as string}
+                  symbol={coin?.oldMarkets[0]?.symbol as string}
                   theme={theme}
                 />
               </div>
             </div>
             <div className="bg-secondary w-full  hidden  p-6 h-[460px] rounded-2xl md:flex flex-col gap-3">
               <p className="text-xl font-bold">
-                نمودار قیمتی {coinTMN?.faBaseAsset}
+                نمودار قیمتی {coin?.oldMarkets[0].faBaseAsset}
               </p>
               <TradingViewWidget
-                symbol={coinUSDT?.symbol as string}
+                symbol={coin?.oldMarkets[1]?.symbol as string}
                 theme={theme}
               />
             </div>
             <div className="w-full flex flex-col gap-8  ">
-              <SwiperCard symbol={coinTMN?.symbol as string} />
+              <SwiperCard symbol={coin?.oldMarkets[0].symbol as string} />
             </div>
             <div className="relative grid grid-cols-1 lg:grid-cols-3 items-start gap-8  ">
               <Comments
-                symbol={coinTMN?.symbol as string}
-                coinName={coinTMN?.faBaseAsset as string}
+                symbol={coin?.oldMarkets[0].symbol as string}
+                coinName={coin?.oldMarkets[0].faBaseAsset as string}
               />
               <div className="lg:sticky top-[4rem] col-span-1 order-1 lg:order-2  transition-all duration-300 ease-in">
                 <TechAnalusis
-                  symbol={coinUSDT?.symbol as string}
+                  symbol={coin?.oldMarkets[1]?.symbol as string}
                   theme={theme}
                 />
               </div>

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import toast from "react-hot-toast";
 
 export interface Comment {
@@ -16,26 +16,27 @@ export interface Comment {
 export const getComments = async (
   symbol: string,
   page = 1,
-  limit = 2,
+  limit = 10,
   sort: "newest" | "oldest" = "newest"
 ): Promise<Comment[]> => {
   try {
-    const res = await axios.get("http://localhost:3120/api/comments", {
-      params: { symbol, page, limit, sort },
-    });
+    const res = await axios.get(
+      "https://crypto-tracker-backend-xt56.onrender.com/api/comments",
+      {
+        params: { symbol, page, limit, sort },
+      }
+    );
 
-    if (res.data?.data) {
-      // میتونی فقط برای موفقیت toast نذاری، معمولا fetch موفق نیاز نیست
-      // toast.success("کامنت‌ها با موفقیت دریافت شدند!", { duration: 3000 });
-      return res.data.data;
+    return res.data?.data || [];
+  } catch (err) {
+    let message = "خطای ناشناخته";
+    
+    if (isAxiosError(err)) {
+      message =
+        (err.response?.data?.error as string) ||
+        (err.response?.data?.message as string) ||
+        "خطا در گرفتن کامنت‌ها";
     }
-
-    return [];
-  } catch (err: any) {
-    const message =
-      (err.data.error as string) ||
-      (err.data.message as string) ||
-      "خطا در گرفتن کامنت‌ها";
 
     toast.error(message, {
       duration: 5000,
@@ -43,10 +44,11 @@ export const getComments = async (
     });
 
     console.error("Get comments error:", err);
-
-    throw new Error(message); // فقط یک پیام می‌دهیم
+ throw new Error(message)
+ 
   }
 };
+
 
 // ================= POST کامنت جدید =================
 export const addComment = async (
@@ -56,12 +58,15 @@ export const addComment = async (
   text: string
 ): Promise<Comment | null> => {
   try {
-    const res = await axios.post("http://localhost:3120/api/comments", {
-      symbol,
-      userId,
-      username,
-      text,
-    });
+    const res = await axios.post(
+      "https://crypto-tracker-backend-xt56.onrender.com/api/comments",
+      {
+        symbol,
+        userId,
+        username,
+        text,
+      }
+    );
 
     toast.success("نظر  با موفقیت اضافه شد!", {
       duration: 5000, // ۵ ثانیه
@@ -69,19 +74,20 @@ export const addComment = async (
     });
 
     return res.data;
-  } catch (err: any) {
-    // اگر جواب از سرور بود
-    const message =
-      err.response?.data?.error ||
-      err.response?.data?.message ||
-      "خطای ناشناخته";
-    console.log(err);
-    toast.error(message, {
-      duration: 2000, // 2 ثانیه
-      style: { background: "red", color: "white" },
-    });
+  } catch (err) {
+    if (isAxiosError(err)) {
+      const message =
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        "خطای ناشناخته";
+      console.log(err);
+      toast.error(message, {
+        duration: 2000, // 2 ثانیه
+        style: { background: "red", color: "white" },
+      });
 
-    console.error("Add comment error:", err);
+      console.error("Add comment error:", err);
+    }
     return null;
   }
 };
@@ -92,13 +98,14 @@ export const likeComment = async (
 ): Promise<{ likes: number; dislikes: number; rating: number } | null> => {
   try {
     const res = await axios.post(
-      `http://localhost:3120/api/comments/${commentId}/like`,
+      `https://crypto-tracker-backend-xt56.onrender.com/api/comments/${commentId}/like`,
       { userId }
     );
     return res.data;
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error liking comment:", error);
-    toast.error(error?.response?.data?.message || "خطا در لایک کامنت!");
+    if (isAxiosError(error))
+      toast.error(error?.response?.data?.message || "خطا در لایک کامنت!");
     return null;
   }
 };
@@ -110,13 +117,14 @@ export const dislikeComment = async (
 ): Promise<{ likes: number; dislikes: number; rating: number } | null> => {
   try {
     const res = await axios.post(
-      `http://localhost:3120/api/comments/${commentId}/dislike`,
+      `https://crypto-tracker-backend-xt56.onrender.com/api/comments/${commentId}/dislike`,
       { userId }
     );
     return res.data;
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error disliking comment:", error);
-    toast.error(error?.response?.data?.message || "خطا در دیسلایک کامنت!");
+    if (isAxiosError(error))
+      toast.error(error?.response?.data?.message || "خطا در دیسلایک کامنت!");
     return null;
   }
 };
@@ -126,7 +134,7 @@ export const deleteComment = async (
   commentId: string
 ): Promise<{ ok: boolean }> => {
   const res = await axios.delete(
-    `http://localhost:3120/api/comments/${commentId}`
+    `https://crypto-tracker-backend-xt56.onrender.com/api/comments/${commentId}`
   );
   return res.data;
 };

@@ -7,7 +7,7 @@ const MainLayout: FC = () => {
   return (
     <>
       <Navbar />
-      <div className="pt-15 flex-1 bg-gray-200/50 dark:bg-[#1D2430]/12">
+      <div className="py-18 flex-1 bg-gray-200/50 dark:bg-[#1D2430]/12">
         <Outlet />
       </div>
       <Footer />

@@ -7,15 +7,19 @@ import { CoinsProvider } from "./utils/Context/getAllCoinProvider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { UserProvider } from "./utils/Context/UserProvider";
 import ToasterPopUp from "./components/Toaster";
+import axios from "axios";
+axios.defaults.withCredentials = true;
 
 function App() {
   return (
     <BrowserRouter>
-      <UserProvider> 
+      <UserProvider>
         <CoinsProvider>
           <ThemeProvider>
-            <GoogleOAuthProvider clientId={import.meta.env.GOOGLE_AUTH_CLIENTID}>
-              <ToasterPopUp/>
+            <GoogleOAuthProvider
+              clientId={import.meta.env.GOOGLE_AUTH_CLIENTID}
+            >
+              <ToasterPopUp />
               <Routes />
             </GoogleOAuthProvider>
           </ThemeProvider>

@@ -3,12 +3,12 @@ import type { OldMarket } from "../../utils/types/markets";
 import { fnum } from "../../utils/functional/formatNumber";
 import { Link } from "react-router-dom";
 
-const TradingMarket = ({ allCoin }: { allCoin: OldMarket[] }) => {
+const TradingMarket = ({ Coin }: { Coin: OldMarket[] }) => {
   return (
     <div className="bg-secondary p-6 rounded-2xl">
       <div className="flex flex-col gap-6 items-start">
         <h4 className="font-bold text-xl ">
-          بازار های معاملاتی {allCoin[0]?.faBaseAsset}
+          بازار های معاملاتی {Coin[0]?.faBaseAsset}
         </h4>
         <table className="w-full  ">
           <thead className="">
@@ -20,7 +20,7 @@ const TradingMarket = ({ allCoin }: { allCoin: OldMarket[] }) => {
             </tr>
           </thead>
           <tbody>
-            {allCoin.map((coin) => (
+            {Coin.map((coin) => (
               <TdTCoin key={coin.symbol} coin={coin} />
             ))}
           </tbody>

@@ -290,7 +290,7 @@ function SignUp() {
             </div>
 
             <Link
-              to={"http://localhost:3120/api/auth/google"}
+              to={"https://crypto-tracker-backend-xt56.onrender.com/api/auth/google"}
               className="bg-secondary p-2 rounded-2xl border shadow-sm border-gray-300 hover:scale-105"
             >
               <div className="flex items-center justify-center gap-2">
